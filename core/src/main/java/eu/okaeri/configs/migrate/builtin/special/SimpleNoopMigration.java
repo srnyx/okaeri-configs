@@ -12,7 +12,7 @@ public class SimpleNoopMigration implements ConfigMigration {
     private final boolean result;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
         return this.result;
     }
 }

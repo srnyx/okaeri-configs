@@ -16,12 +16,12 @@ public class SimpleConditionalMigration implements ConfigMigration {
     private final ConfigMigration migrationFalse;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
-        if (this.when.migrate(config, view)) {
-            return this.migrationTrue.migrate(config, view);
+        if (this.when.migrate(config, view, false)) {
+            return this.migrationTrue.migrate(config, view, false);
         }
 
-        return this.migrationFalse.migrate(config, view);
+        return this.migrationFalse.migrate(config, view, false);
     }
 }

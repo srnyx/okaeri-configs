@@ -14,7 +14,7 @@ public class SimpleExistsMigration implements ConfigMigration {
     private final String key;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
-        return view.exists(this.key);
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+        return view.existsRaw(this.key);
     }
 }

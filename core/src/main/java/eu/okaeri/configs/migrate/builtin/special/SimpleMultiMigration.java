@@ -19,10 +19,10 @@ public class SimpleMultiMigration implements ConfigMigration {
     private boolean requireAll = false;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
         long performed = Arrays.stream(this.migrations)
-            .filter(migration -> migration.migrate(config, view))
+            .filter(migration -> migration.migrate(config, view, false))
             .count();
 
         return this.requireAll

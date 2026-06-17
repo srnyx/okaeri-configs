@@ -14,13 +14,13 @@ public class SimpleDeleteMigration implements ConfigMigration {
     private final String key;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
-        if (!view.exists(this.key)) {
+        if (!view.existsRaw(this.key)) {
             return false;
         }
 
-        view.remove(this.key);
+        view.removeRaw(this.key);
         return true;
     }
 }

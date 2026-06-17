@@ -18,13 +18,13 @@ public class SimplePredicateMigration<T> implements ConfigMigration {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
-        if (!view.exists(this.key)) {
+        if (!view.existsRaw(this.key)) {
             return false;
         }
 
-        T value = (T) view.get(this.key);
+        T value = (T) view.getRaw(this.key);
         return this.predicate.test(value);
     }
 }

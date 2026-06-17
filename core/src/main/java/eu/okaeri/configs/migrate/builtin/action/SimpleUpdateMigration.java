@@ -18,10 +18,10 @@ public class SimpleUpdateMigration implements ConfigMigration {
     private final Function<Object, Object> function;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
-        Object oldValue = view.get(this.key);
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+        Object oldValue = view.getRaw(this.key);
         Object newValue = this.function.apply(oldValue);
-        view.set(this.key, newValue);
+        view.setRaw(this.key, newValue);
         return !Objects.equals(oldValue, newValue);
     }
 }

@@ -14,7 +14,7 @@ public class SimpleNotMigration implements ConfigMigration {
     private final ConfigMigration migration;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
-        return !this.migration.migrate(config, view);
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+        return !this.migration.migrate(config, view, false);
     }
 }

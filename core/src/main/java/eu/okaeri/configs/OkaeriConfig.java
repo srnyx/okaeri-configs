@@ -720,9 +720,9 @@ public abstract class OkaeriConfig {
      * @throws OkaeriException if {@link #configurer} or {@link #bindFile} is null or loading fails
      */
     public OkaeriConfig load(@NonNull File file) throws OkaeriException {
-        try {
-            return this.load(new FileInputStream(file));
-        } catch (FileNotFoundException exception) {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return this.load(inputStream);
+        } catch (IOException exception) {
             throw new OkaeriException("failed #load using file " + file, exception);
         }
     }
@@ -824,7 +824,7 @@ public abstract class OkaeriConfig {
         return this.migrate(
             (performed) -> {
                 try {
-                    this.load(this.saveToString());
+                    this.update();
                 } catch (OkaeriException exception) {
                     throw new OkaeriException("failed #migrate due to load error after migrations (not saving)", exception);
                 }
@@ -841,6 +841,8 @@ public abstract class OkaeriConfig {
      * <b>IMPORTANT: Call order matters!</b> This method is <b>imperative</b> and runs
      * immediately on the current state. You MUST call {@link #load()} BEFORE migrate(),
      * otherwise migrations will run on default field values instead of your saved data.
+     * You MUST call {@link #update()} in the callback to ensure migration changes are
+     * applied on Java fields in the config object.
      * <p>
      * The callback is invoked only if at least one migration was performed (count > 0).
      * Use this variant when you want custom save behavior instead of the default.
@@ -856,7 +858,7 @@ public abstract class OkaeriConfig {
         long performed = Arrays.stream(migrations)
             .filter(migration -> {
                 try {
-                    return migration.migrate(this, view);
+                    return migration.migrate(this, view, false);
                 } catch (Exception exception) {
                     throw new OkaeriException("migrate failure in " + migration.getClass().getName(), exception);
                 }
@@ -896,6 +898,21 @@ public abstract class OkaeriConfig {
             this.context.validate(this, true);
         }
 
+        return this;
+    }
+
+    /**
+     * Updates internalState with the current values from the config fields.
+     *
+     * @return  this instance
+     */
+    public OkaeriConfig updateInternalState() {
+
+        if (this.getDeclaration() == null) {
+            throw new IllegalStateException("declaration cannot be null: config not initialized");
+        }
+
+        this.load(this.saveToBytes());
         return this;
     }
 

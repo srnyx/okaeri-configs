@@ -79,7 +79,10 @@ class ConfigMigrationTest {
         };
 
         // When
-        boolean result = migration.migrate(config, view);
+        boolean result = migration.migrate(config, view, false);
+        // internalState needs to be manually updated to reflect the
+        // changes from fields when config is updated directly
+        config.updateInternalState();
 
         // Then
         assertThat(result).isTrue();

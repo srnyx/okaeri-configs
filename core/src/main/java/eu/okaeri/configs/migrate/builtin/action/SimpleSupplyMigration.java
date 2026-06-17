@@ -17,13 +17,13 @@ public class SimpleSupplyMigration implements ConfigMigration {
     private final Supplier supplier;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
-        if (view.exists(this.key)) {
+        if (view.existsRaw(this.key)) {
             return false;
         }
 
-        view.set(this.key, this.supplier.get());
+        view.setRaw(this.key, this.supplier.get());
         return true;
     }
 }

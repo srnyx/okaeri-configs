@@ -17,14 +17,14 @@ public class SimpleCopyMigration implements ConfigMigration {
     private final String toKey;
 
     @Override
-    public boolean migrate(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
+    public boolean runMigration(@NonNull OkaeriConfig config, @NonNull RawConfigView view) {
 
-        if (!view.exists(this.fromKey)) {
+        if (!view.existsRaw(this.fromKey)) {
             return false;
         }
 
-        Object targetValue = view.get(this.fromKey);
-        Object oldValue = view.set(this.toKey, targetValue);
+        Object targetValue = view.getRaw(this.fromKey);
+        Object oldValue = view.setRaw(this.toKey, targetValue);
 
         return !Objects.equals(targetValue, oldValue);
     }

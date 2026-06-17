@@ -38,8 +38,9 @@ public interface TypedKeyWriter {
      *
      * @param key the key
      * @param value the raw value
+     * @return the previous raw value, or null
      */
-    void setRaw(@NonNull String key, Object value);
+    Object setRaw(@NonNull String key, Object value);
 
     /**
      * Gets the raw value at the specified key (for returning old value on set).
@@ -61,10 +62,7 @@ public interface TypedKeyWriter {
      * @return the previous raw value, or null
      */
     default Object set(@NonNull String key, Object value) {
-        Object old = this.getRawOrNull(key);
-        value = this.getConfigurer().simplify(value, null, this.getWriterContext(key), true);
-        this.setRaw(key, value);
-        return old;
+        return this.set(key, value, (GenericsDeclaration) null);
     }
 
     /**
@@ -75,7 +73,7 @@ public interface TypedKeyWriter {
      * @param genericType the type declaration for simplification
      * @return the previous raw value, or null
      */
-    default Object set(@NonNull String key, Object value, @NonNull GenericsDeclaration genericType) {
+    default Object set(@NonNull String key, Object value, GenericsDeclaration genericType) {
         Object old = this.getRawOrNull(key);
         value = this.getConfigurer().simplify(value, genericType, this.getWriterContext(key), true);
         this.setRaw(key, value);
