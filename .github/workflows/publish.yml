@@ -18,4 +18,5 @@ jobs:
     with:
       name: Okaeri Configs
       channel: snapshots
+      task: clean deploy -DskipTests
     secrets: inherit
