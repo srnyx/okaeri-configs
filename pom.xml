@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>${env.VERSION}</revision>
+        <revision>dev</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -277,14 +277,14 @@
 
     <profiles>
         <profile>
-            <id>default-version</id>
+            <id>env-version</id>
             <activation>
                 <property>
-                    <name>!env.VERSION</name>
+                    <name>env.VERSION</name>
                 </property>
             </activation>
             <properties>
-                <revision>dev</revision>
+                <revision>${env.VERSION}</revision>
             </properties>
         </profile>
     </profiles>
