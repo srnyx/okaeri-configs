@@ -1,0 +1,21 @@
+name: Maven Publish (Snapshots)
+on:
+  push:
+    branches:
+      - srnyx-publish
+    paths-ignore:
+      - '.wiki'
+      - '.gitignore'
+      - '**/README.md'
+      - 'run-tests.sh'
+      - '.gitattributes'
+      - 'LICENSE'
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: srnyx/tools/.github/workflows/maven_publish.yml@main
+    with:
+      name: Okaeri Configs
+      channel: snapshots
+    secrets: inherit
