@@ -1,3 +1,12 @@
+# srnyx's Changes
+
+Repository: https://repo.srnyx.com/snapshots/
+
+- https://github.com/OkaeriPoland/okaeri-configs/pull/55
+- https://github.com/OkaeriPoland/okaeri-configs/pull/56
+- https://github.com/OkaeriPoland/okaeri-configs/pull/57
+- https://github.com/OkaeriPoland/okaeri-configs/pull/58
+
 # Okaeri Configs
 
 ![License](https://img.shields.io/github/license/OkaeriPoland/okaeri-configs)

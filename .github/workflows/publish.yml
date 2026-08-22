@@ -13,10 +13,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.compute.outputs.version }}
+    steps:
+      - name: Compute version
+        id: compute
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ -n "${GITHUB_REF_NAME}" ]; then
+            VERSION="${GITHUB_REF_NAME}"
+          elif [ -n "${GITHUB_SHA}" ]; then
+            VERSION="${GITHUB_SHA:0:7}"
+          else
+            VERSION="snapshot"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: version
     uses: srnyx/tools/.github/workflows/maven_publish.yml@main
     with:
-      name: Okaeri Configs
       channel: snapshots
-      task: clean deploy -DskipTests
+      task: clean deploy -DskipTests -Drevision=${{ needs.version.outputs.version }}
     secrets: inherit
