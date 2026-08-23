@@ -36,7 +36,34 @@ class YamlBukkitConfigurerFeaturesTest {
         assertThat(yaml).doesNotContain("# This is a simple field comment");
     }
 
-    // Test config class
+    @Test
+    void testMultilineStringUsesQuotedEscapeNotBlockScalar() throws Exception {
+        // Given: Config with a string value containing embedded newlines
+        YamlBukkitConfigurer configurer = new YamlBukkitConfigurer();
+
+        MultilineConfig config = ConfigManager.create(MultilineConfig.class);
+        config.withConfigurer(configurer);
+
+        // When: Write to OutputStream
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        config.save(output);
+        String yaml = output.toString();
+
+        // Then: Quoted escape style is used instead of a literal block scalar
+        assertThat(yaml).contains("start: \"\\nhello\\nworld\\n\"");
+        assertThat(yaml).doesNotContain("start: |");
+
+        // And: Unaffected plain string values keep their existing style
+        assertThat(yaml).contains("plainField: plain");
+
+        // And: Round-trips back to the exact original value
+        MultilineConfig loaded = ConfigManager.create(MultilineConfig.class);
+        loaded.withConfigurer(new YamlBukkitConfigurer());
+        loaded.load(new java.io.ByteArrayInputStream(output.toByteArray()));
+        assertThat(loaded.getStart()).isEqualTo(config.getStart());
+    }
+
+    // Test config classes
 
     @Data
     @EqualsAndHashCode(callSuper = false)
@@ -46,5 +73,12 @@ class YamlBukkitConfigurerFeaturesTest {
 
         @Comment({"Multi-line comment", "Line 2 of comment"})
         private int numberField = 42;
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class MultilineConfig extends OkaeriConfig {
+        private String start = "\nhello\nworld\n";
+        private String plainField = "plain";
     }
 }
